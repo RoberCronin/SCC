@@ -124,6 +124,7 @@ void File::AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize)
         tokens[tokens.size() - 1][sizeof(TokenType) + i] = tokenValue[i];
     }
     tokens[tokens.size() - 1][sizeof(TokenType) + tokenValueSize] = '\0';
+    tokenCount++;
 }
 
 void File::AddPartialTokenValue(std::string tokenType, char tokenValue, int tokenValueSize)
