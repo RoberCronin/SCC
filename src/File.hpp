@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 
+enum TokenType { SEPARATOR, IDENTIFIER, KEYWORD, OPERATOR, TYPE, COMMENT, CONSTANT_STRING, CONSTANAT_INTEGER, CONSTANT_BOOLEAN };
+
 class File
 {
 public:
