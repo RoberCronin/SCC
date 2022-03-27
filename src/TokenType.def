@@ -1,0 +1,16 @@
+// Token Type defenitions
+//
+// Creating an enum like this so the enum identifier can be printed out, 
+// instead of just the integer associated with it
+
+TOKENTYPE_DEF(SEPARATOR)
+TOKENTYPE_DEF(IDENTIFIER)
+TOKENTYPE_DEF(KEYWORD)
+TOKENTYPE_DEF(OPERATOR)
+TOKENTYPE_DEF(TYPE)
+TOKENTYPE_DEF(COMMENT)
+
+// variable types
+TOKENTYPE_DEF(CONSTANT_STRING)
+TOKENTYPE_DEF(CONSTANAT_INTEGER)
+TOKENTYPE_DEF(CONSTANT_BOOLEAN)

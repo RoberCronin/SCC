@@ -19,7 +19,7 @@ void File::Tokenize()
     for (int i = 0; i < length; i++)
     {
         // if text is inside quotes
-        if (filePointer[i] == '\"')
+        /*if (filePointer[i] == '\"')
         {
             insideQuotes = true;
             for (int j = 1; insideQuotes; j++)
@@ -35,7 +35,7 @@ void File::Tokenize()
                     i = i + j + 1;
                 }
             }
-        }
+        }*/
 
         // test for single character, non-operator tokens
         switch (filePointer[i])
@@ -51,7 +51,7 @@ void File::Tokenize()
         case '<':
         case '>':
         case ',':
-            AddToken("Token", std::string(1, filePointer[i]), 1);
+            AddToken(SEPARATOR, &filePointer[i], 1);
             break;
         }
     }
@@ -61,12 +61,26 @@ void File::PrintTokens()
 {
     for (int i = 0; i < tokens.size(); i++)
     {
-        int tokenSize = 0;
-        while (tokens[i][tokenSize] != '\0') tokenSize++;
-
-        for (int j = 0; j < tokenSize; j++)
+        // print token type
+        switch ((int)tokens[i][0])
         {
-            std::cout << tokens[i][j];
+            // weird formatting because of using the preprocessor to automatically get token type enum names
+#define TOKENTYPE_DEF(x)                                                                                                                                       \
+    case x:                                                                                                                                                    \
+        std::cout << #x;                                                                                                                                       \
+        break;
+#include "TokenType.def"
+#undef TOKENTYPE_DEF
+        }
+
+        std::cout << ' ';
+
+        int tokenValueSize = 0;
+        while (tokens[i][tokenValueSize + 4] != '\0') tokenValueSize++;
+
+        for (int j = 0; j < tokenValueSize; j++)
+        {
+            std::cout << tokens[i][4 + j];
         }
         std::cout << std::endl;
     }
@@ -85,29 +99,35 @@ void File::OpenFile(std::string FilePath)
     filePointer = buffer;
 }
 
-void File::AddToken(std::string tokenType, std::string tokenValue, int tokenValueSize)
+void File::AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize)
 {
-    tokenTypeSize = 0;
-    while (tokenType[tokenTypeSize] != '\0') tokenTypeSize++;
+    // A token's memory is layed out in the form,
+    // TokenType, TokenValue
+    //
+    // The token type is an enum, so it consists of 4 bytes
+    // The token value is a string that has the relevant data
+    //
+    // Example,
+    // The token, "String Token", onced tokenized would be,
+    // SEPARATOR"
+    // CONSTANT_STRINGString Token
+    // SEPARATOR"
 
-    // allocate memory big enough for the tokenType, tokenValue, and two extra parenthesis, and an escape character
-    int totalTokenSize = tokenTypeSize + tokenValueSize + 3;
-    tokens.push_back((char*)malloc(sizeof(char) * totalTokenSize));
+    // allocate memory big enough for the TokenType, tokenValue, and an escape character
+    const int totalTokenSize = sizeof(TokenType) + sizeof(char) * tokenValueSize + 1;
+    tokens.push_back((char*)malloc(totalTokenSize));
 
-    for (int i = 0; i < tokenTypeSize; i++)
-    {
-        tokens[tokens.size() - 1][i] = tokenType[i];
-    }
-
-    tokens[tokens.size() - 1][tokenTypeSize] = '(';
-
+    tokens[tokens.size() - 1][0] = tokenType;
+    // std::cout << (int)tokens[tokens.size() - 1][0];
     for (int i = 0; i < tokenValueSize; i++)
     {
-        tokens[tokens.size() - 1][tokenTypeSize + i + 1] = tokenValue[i];
+        tokens[tokens.size() - 1][4 + i] = tokenValue[i];
     }
-
-    tokens[tokens.size() - 1][totalTokenSize - 2] = ')';
-    tokens[tokens.size() - 1][totalTokenSize - 1] = '\0';
+    /*for (int i = 0; i < tokenValueSize; i++)
+    {
+        std::cout << tokens[tokens.size() - 1][4 + i] << std::endl;
+    }*/
+    tokens[tokens.size() - 1][4 + tokenValueSize] = '\0';
 }
 
 void File::AddPartialTokenValue(std::string tokenType, char tokenValue, int tokenValueSize)

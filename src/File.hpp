@@ -3,7 +3,11 @@
 #include <iostream>
 #include <vector>
 
-enum TokenType { SEPARATOR, IDENTIFIER, KEYWORD, OPERATOR, TYPE, COMMENT, CONSTANT_STRING, CONSTANAT_INTEGER, CONSTANT_BOOLEAN };
+enum TokenType {
+#define TOKENTYPE_DEF(x) x,
+#include "TokenType.def"
+#undef TOKENTYPE_DEF
+};
 
 class File
 {
@@ -24,7 +28,7 @@ private:
     void OpenFile(std::string FilePath);
 
     // Add a token
-    void AddToken(std::string tokenType, std::string tokenValue, int tokenValueSize);
+    void AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize);
 
     // Add a single char of a token
     int partialTokenCallCount = 0;
