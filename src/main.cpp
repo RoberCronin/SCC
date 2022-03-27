@@ -6,11 +6,11 @@ int main()
 {
     File file("tests/test.txt");
 
-    for (int i = 0; i < file.length; i++)
+    for (int i = 0; i < file.fileLength; i++)
     {
         std::cout << file.filePointer[i];
     }
-    std::cout << '\n' << file.length << std::endl;
+    std::cout << '\n' << file.fileLength << std::endl;
 
     file.Tokenize();
     file.PrintTokens();

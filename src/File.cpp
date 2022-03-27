@@ -16,7 +16,7 @@ File::~File()
 
 void File::Tokenize()
 {
-    for (int i = 0; i < length; i++)
+    for (int i = 0; i < fileLength; i++)
     {
         // if text is inside quotes
         /*if (filePointer[i] == '\"')
@@ -51,6 +51,7 @@ void File::Tokenize()
         case '<':
         case '>':
         case ',':
+        case '\"':
             AddToken(SEPARATOR, &filePointer[i], 1);
             break;
         }
@@ -69,18 +70,18 @@ void File::PrintTokens()
     case x:                                                                                                                                                    \
         std::cout << #x;                                                                                                                                       \
         break;
-#include "TokenType.def"
+#include "TokenType.txt"
 #undef TOKENTYPE_DEF
         }
 
         std::cout << ' ';
 
         int tokenValueSize = 0;
-        while (tokens[i][tokenValueSize + 4] != '\0') tokenValueSize++;
+        while (tokens[i][tokenValueSize + sizeof(TokenType)] != '\0') tokenValueSize++;
 
         for (int j = 0; j < tokenValueSize; j++)
         {
-            std::cout << tokens[i][4 + j];
+            std::cout << tokens[i][sizeof(TokenType) + j];
         }
         std::cout << std::endl;
     }
@@ -91,10 +92,10 @@ void File::OpenFile(std::string FilePath)
     std::ifstream t;
     t.open(FilePath);                // open input file
     t.seekg(0, std::ios::end);       // go to the end
-    length = t.tellg();              // report location (this is the length)
+    fileLength = t.tellg();              // report location (this is the length)
     t.seekg(0, std::ios::beg);       // go back to the beginning
-    char* buffer = new char[length]; // allocate memory for a buffer of appropriate dimension
-    t.read(buffer, length);          // read the whole file into the buffer
+    char* buffer = new char[fileLength]; // allocate memory for a buffer of appropriate dimension
+    t.read(buffer, fileLength);          // read the whole file into the buffer
     t.close();                       // close file handle
     filePointer = buffer;
 }
@@ -118,16 +119,11 @@ void File::AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize)
     tokens.push_back((char*)malloc(totalTokenSize));
 
     tokens[tokens.size() - 1][0] = tokenType;
-    // std::cout << (int)tokens[tokens.size() - 1][0];
     for (int i = 0; i < tokenValueSize; i++)
     {
-        tokens[tokens.size() - 1][4 + i] = tokenValue[i];
+        tokens[tokens.size() - 1][sizeof(TokenType) + i] = tokenValue[i];
     }
-    /*for (int i = 0; i < tokenValueSize; i++)
-    {
-        std::cout << tokens[tokens.size() - 1][4 + i] << std::endl;
-    }*/
-    tokens[tokens.size() - 1][4 + tokenValueSize] = '\0';
+    tokens[tokens.size() - 1][sizeof(TokenType) + tokenValueSize] = '\0';
 }
 
 void File::AddPartialTokenValue(std::string tokenType, char tokenValue, int tokenValueSize)

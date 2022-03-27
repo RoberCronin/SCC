@@ -5,7 +5,7 @@
 
 enum TokenType {
 #define TOKENTYPE_DEF(x) x,
-#include "TokenType.def"
+#include "TokenType.txt"
 #undef TOKENTYPE_DEF
 };
 
@@ -13,7 +13,8 @@ class File
 {
 public:
     char* filePointer;
-    int length;
+    int fileLength;
+    int tokenCount = 0;
     std::vector<char*> tokens;
 
     File(std::string FilePath);
