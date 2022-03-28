@@ -1,4 +1,5 @@
 # Tokenizer
+- Make a function which returns the type of token, then change logic to work accordingly
 - Add support for constant string tokens
 - Add support for constant boolean tokens
 - Add support for constant integer tokens
