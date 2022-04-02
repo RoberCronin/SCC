@@ -1,8 +1,8 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
-#include <vector>
 #include <string.h>
+#include <vector>
 
 #include "File.hpp"
 
@@ -20,20 +20,16 @@ void File::Tokenize()
 {
     TokenInfo tokenInfo;
 
-    for (int i = GetIndexOfNextToken(0, 0); i < fileLength && i != -1;)
-    {
-        tokenInfo = GetTokenInfoFromIndex(i);
-        AddToken(tokenInfo.tokenType, i, tokenInfo.tokenLength);
-        i = GetIndexOfNextToken(i, tokenInfo.tokenLength);
-    }
+    GetAllSeparatorTokens();
+    GetAllKeywordTokens();
 }
 
 void File::PrintTokens()
 {
-    for (int i = 0; i < tokens.size(); i++)
+    for (int i = 0; i < token.size(); i++)
     {
         // print token type
-        switch ((int)tokens[i][0])
+        switch (token[i].tokenType)
         {
             // weird formatting because of using the preprocessor to automatically get token type enum names
 #define TOKENTYPE_DEF(x)                                                                                                                                       \
@@ -46,12 +42,9 @@ void File::PrintTokens()
 
         std::cout << ' ';
 
-        int tokenValueSize = 0;
-        while (tokens[i][tokenValueSize + sizeof(TokenType)] != '\0') tokenValueSize++;
-
-        for (int j = 0; j < tokenValueSize; j++)
+        for (int j = 0; j < token[i].tokenLength; j++)
         {
-            std::cout << tokens[i][sizeof(TokenType) + j];
+            std::cout << filePointer[token[i].tokenIndex + j];
         }
         std::cout << std::endl;
     }
@@ -70,80 +63,116 @@ void File::OpenFile(std::string FilePath)
     filePointer = buffer;
 }
 
-void File::AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize)
+void File::GetAllSeparatorTokens()
 {
-    // A token's memory is layed out in the form,
-    // TokenType, TokenValue
-    //
-    // The token type is an enum, so it consists of 4 bytes
-    // The token value is a string that has the relevant data
-    //
-    // Example,
-    // The token, "String Token", onced tokenized would be,
-    // SEPARATOR"
-    // CONSTANT_STRINGString Token
-    // SEPARATOR"
-
-    // allocate memory big enough for the TokenType, tokenValue, and an escape character
-    const int totalTokenSize = sizeof(TokenType) + sizeof(char) * tokenValueSize + 1;
-    tokens.push_back((char*)malloc(totalTokenSize));
-
-    tokens[tokens.size() - 1][0] = tokenType;
-    for (int i = 0; i < tokenValueSize; i++)
+    for (int i = 0; i < fileLength; i++)
     {
-        tokens[tokens.size() - 1][sizeof(TokenType) + i] = filePointer[tokenIndex + i];
-    }
-    tokens[tokens.size() - 1][sizeof(TokenType) + tokenValueSize] = '\0';
-    tokenCount++;
-}
-
-TokenInfo File::GetTokenInfoFromIndex(int index)
-{
-    TokenInfo tokenInfo;
-
-    // check for single character tokens
-    switch (filePointer[index])
-    {
-    case '#':
-    case '(':
-    case ')':
-    case '{':
-    case '}':
-    case '[':
-    case ']':
-    case ';':
-    case '<':
-    case '>':
-    case ',':
-    case '\"':
-        tokenInfo.tokenType = SEPARATOR_HASH;
-        tokenInfo.tokenLength = 1;
-        return tokenInfo;
-        break;
-    }
-
-    return tokenInfo;
-}
-
-// returns -1 if at the end of the file
-int File::GetIndexOfNextToken(int indexOfCurrentToken, int lengthOfCurrentToken)
-{
-    for (int i = 0; indexOfCurrentToken + lengthOfCurrentToken + i < fileLength; i++)
-    {
-        switch (filePointer[indexOfCurrentToken + lengthOfCurrentToken + i])
+        switch (filePointer[i])
         {
-        case ' ':
-        case '\n':
-        case '\t':
-        case '\v':
-            continue;
+        case '#':
+            token.push_back({i, 1, SEPARATOR_HASH});
+            break;
+        case '(':
+            token.push_back({i, 1, SEPARATOR_OPEN_PARENTHESIS});
+            break;
+        case ')':
+            token.push_back({i, 1, SEPARATOR_CLOSE_PARENTHESIS});
+            break;
+        case '{':
+            token.push_back({i, 1, SEPARATOR_OPEN_CURLY_BRACKET});
+            break;
+        case '}':
+            token.push_back({i, 1, SEPARATOR_CLOSE_CURLY_BRACKET});
+            break;
+        case '[':
+            token.push_back({i, 1, SEPARATOR_OPEN_SQUARE_BRACKET});
+            break;
+        case ']':
+            token.push_back({i, 1, SEPARATOR_CLOSE_SQUARE_BRACKET});
+            break;
+        case ';':
+            token.push_back({i, 1, SEPARATOR_SEMI_COLON});
+            break;
+        case '<':
+            token.push_back({i, 1, SEPARATOR_ARROW_LEFT});
+            break;
+        case '>':
+            token.push_back({i, 1, SEPARATOR_ARROW_RIGHT});
+            break;
+        case ',':
+            token.push_back({i, 1, SEPARATOR_COMMA});
+            break;
+        case '\"':
+            token.push_back({i, 1, SEPARATOR_QUOTE});
+            break;
+        default:
             break;
         }
-
-        return indexOfCurrentToken + lengthOfCurrentToken + i;
-        break;
     }
-
-    return -1;
 }
 
+void File::GetAllKeywordTokens()
+{
+    GetAllOfSingleKeyword("auto", KEYWORD_AUTO);
+    GetAllOfSingleKeyword("double", KEYWORD_DOUBLE);
+    GetAllOfSingleKeyword("int", KEYWORD_INT);
+    GetAllOfSingleKeyword("struct", KEYWORD_STRUCT);
+    GetAllOfSingleKeyword("break", KEYWORD_BREAK);
+    GetAllOfSingleKeyword("else", KEYWORD_ELSE);
+    GetAllOfSingleKeyword("longswitch", KEYWORD_LONGSWITCH);
+    GetAllOfSingleKeyword("case", KEYWORD_CASE);
+    GetAllOfSingleKeyword("enum", KEYWORD_ENUM);
+    GetAllOfSingleKeyword("register", KEYWORD_REGISTER);
+    GetAllOfSingleKeyword("typedef", KEYWORD_TYPEDEF);
+    GetAllOfSingleKeyword("char", KEYWORD_CHAR);
+    GetAllOfSingleKeyword("extern", KEYWORD_EXTERN);
+    GetAllOfSingleKeyword("return", KEYWORD_RETURN);
+    GetAllOfSingleKeyword("union", KEYWORD_UNION);
+    GetAllOfSingleKeyword("continue", KEYWORD_CONTINUE);
+    GetAllOfSingleKeyword("for", KEYWORD_FOR);
+    GetAllOfSingleKeyword("signed", KEYWORD_SIGNED);
+    GetAllOfSingleKeyword("void", KEYWORD_VOID);
+    GetAllOfSingleKeyword("do", KEYWORD_DO);
+    GetAllOfSingleKeyword("if", KEYWORD_IF);
+    GetAllOfSingleKeyword("static", KEYWORD_STATIC);
+    GetAllOfSingleKeyword("while", KEYWORD_WHILE);
+    GetAllOfSingleKeyword("default", KEYWORD_DEFAULT);
+    GetAllOfSingleKeyword("goto", KEYWORD_GOTO);
+    GetAllOfSingleKeyword("sizeof", KEYWORD_SIZEOF);
+    GetAllOfSingleKeyword("volatile", KEYWORD_VOLATILE);
+    GetAllOfSingleKeyword("const", KEYWORD_CONST);
+    GetAllOfSingleKeyword("float", KEYWORD_FLOAT);
+    GetAllOfSingleKeyword("short", KEYWORD_SHORT);
+    GetAllOfSingleKeyword("unsigned", KEYWORD_UNSIGNED);
+}
+
+void File::GetAllOfSingleKeyword(const char* searchString, TokenType tokenType)
+{
+    int counter = 0;
+
+    int searchStringLength = 0;
+    while (searchString[searchStringLength] != '\0') searchStringLength++;
+
+    for (int i = 0; i < fileLength; i++)
+    {
+        if (counter == searchStringLength)
+        {
+            token.push_back({i - counter, searchStringLength, tokenType});
+            counter = 0;
+        }
+
+        if (searchString[counter] == filePointer[i])
+        {
+            counter++;
+        }
+        else
+        {
+            // Special case where character preceding the i'th character is duplicate
+            if (counter > 0)
+            {
+                i -= counter;
+            }
+            counter = 0;
+        }
+    }
+}

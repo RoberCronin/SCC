@@ -23,6 +23,7 @@ public:
     int fileLength;
     int tokenCount = 0;
     std::vector<char*> tokens;
+    std::vector<TokenInfo> token;
 
     File(std::string FilePath);
     ~File();
@@ -37,13 +38,9 @@ private:
 
     void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
 
-    TokenInfo GetTokenInfoFromIndex(int index);
-
-    int CheckForKeyword();
-
-    int GetIndexOfNextToken(int indexOfLastToken, int lengthOfLastToken);
-
     void GetAllSeparatorTokens();
 
-    bool insideQuotes = false;
+    void GetAllKeywordTokens();
+
+    void GetAllOfSingleKeyword(const char* searchString, TokenType tokenType);
 };
