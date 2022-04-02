@@ -9,6 +9,12 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
+struct TokenInfo
+{
+    int tokenLength;
+    TokenType tokenType;
+};
+
 class File
 {
 public:
@@ -28,13 +34,11 @@ private:
     // Opens file, and saves data to filePointer, and saves length of file in length
     void OpenFile(std::string FilePath);
 
-    // Add a token
-    void AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize);
+    void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
 
-    // Add a single char of a token
-    int partialTokenCallCount = 0;
-    void AddPartialTokenValue(std::string tokenType, char tokenValue, int tokenValueSize);
+    TokenInfo GetTokenInfoFromIndex(int index);
+
+    int GetIndexOfNextToken(int indexOfLastToken, int lengthOfLastToken);
 
     bool insideQuotes = false;
-    int tokenTypeSize = 0;
 };

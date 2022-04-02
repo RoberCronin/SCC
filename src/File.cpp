@@ -1,6 +1,8 @@
+#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string.h>
 
 #include "File.hpp"
 
@@ -16,45 +18,13 @@ File::~File()
 
 void File::Tokenize()
 {
-    for (int i = 0; i < fileLength; i++)
-    {
-        // if text is inside quotes
-        /*if (filePointer[i] == '\"')
-        {
-            insideQuotes = true;
-            for (int j = 1; insideQuotes; j++)
-            {
-                if (filePointer[i + j] == '\"')
-                {
-                    for (int stringIndex = 0; stringIndex < j; stringIndex++)
-                    {
-                        AddPartialTokenValue("String", filePointer[stringIndex + i + 1], j - 1);
-                    }
-                    // AddToken("String", std::string((j - 1), filePointer[i]), 1);
-                    insideQuotes = false;
-                    i = i + j + 1;
-                }
-            }
-        }*/
+    TokenInfo tokenInfo;
 
-        // test for single character, non-operator tokens
-        switch (filePointer[i])
-        {
-        case '#':
-        case '(':
-        case ')':
-        case '{':
-        case '}':
-        case '[':
-        case ']':
-        case ';':
-        case '<':
-        case '>':
-        case ',':
-        case '\"':
-            AddToken(SEPARATOR, &filePointer[i], 1);
-            break;
-        }
+    for (int i = GetIndexOfNextToken(0, 0); i < fileLength && i != -1;)
+    {
+        tokenInfo = GetTokenInfoFromIndex(i);
+        AddToken(tokenInfo.tokenType, i, tokenInfo.tokenLength);
+        i = GetIndexOfNextToken(i, tokenInfo.tokenLength);
     }
 }
 
@@ -90,17 +60,17 @@ void File::PrintTokens()
 void File::OpenFile(std::string FilePath)
 {
     std::ifstream t;
-    t.open(FilePath);                // open input file
-    t.seekg(0, std::ios::end);       // go to the end
+    t.open(FilePath);                    // open input file
+    t.seekg(0, std::ios::end);           // go to the end
     fileLength = t.tellg();              // report location (this is the length)
-    t.seekg(0, std::ios::beg);       // go back to the beginning
+    t.seekg(0, std::ios::beg);           // go back to the beginning
     char* buffer = new char[fileLength]; // allocate memory for a buffer of appropriate dimension
     t.read(buffer, fileLength);          // read the whole file into the buffer
-    t.close();                       // close file handle
+    t.close();                           // close file handle
     filePointer = buffer;
 }
 
-void File::AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize)
+void File::AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize)
 {
     // A token's memory is layed out in the form,
     // TokenType, TokenValue
@@ -121,41 +91,58 @@ void File::AddToken(TokenType tokenType, char* tokenValue, int tokenValueSize)
     tokens[tokens.size() - 1][0] = tokenType;
     for (int i = 0; i < tokenValueSize; i++)
     {
-        tokens[tokens.size() - 1][sizeof(TokenType) + i] = tokenValue[i];
+        tokens[tokens.size() - 1][sizeof(TokenType) + i] = filePointer[tokenIndex + i];
     }
     tokens[tokens.size() - 1][sizeof(TokenType) + tokenValueSize] = '\0';
     tokenCount++;
 }
 
-void File::AddPartialTokenValue(std::string tokenType, char tokenValue, int tokenValueSize)
+TokenInfo File::GetTokenInfoFromIndex(int index)
 {
-    // If partialTokenCallCount is 0 then memory needs to be allocated for the token
-    if (partialTokenCallCount == 0)
+    TokenInfo tokenInfo;
+
+    // check for single character tokens
+    switch (filePointer[index])
     {
-        tokenTypeSize = 0;
-        while (tokenType[tokenTypeSize] != '\0') tokenTypeSize++;
+    case '#':
+    case '(':
+    case ')':
+    case '{':
+    case '}':
+    case '[':
+    case ']':
+    case ';':
+    case '<':
+    case '>':
+    case ',':
+    case '\"':
+        tokenInfo.tokenType = SEPARATOR;
+        tokenInfo.tokenLength = 1;
+        return tokenInfo;
+        break;
+    }
 
-        // allocate memory big enough for the tokenType, tokenValue, and two extra parenthesis, and an escape character
-        int totalTokenSize = tokenTypeSize + tokenValueSize + 3;
-        tokens.push_back((char*)malloc(sizeof(char) * totalTokenSize));
+    return tokenInfo;
+}
 
-        for (int i = 0; i < tokenTypeSize; i++)
+// returns -1 if at the end of the file
+int File::GetIndexOfNextToken(int indexOfCurrentToken, int lengthOfCurrentToken)
+{
+    for (int i = 0; indexOfCurrentToken + lengthOfCurrentToken + i < fileLength; i++)
+    {
+        switch (filePointer[indexOfCurrentToken + lengthOfCurrentToken + i])
         {
-            tokens[tokens.size() - 1][i] = tokenType[i];
+        case ' ':
+        case '\n':
+        case '\t':
+        case '\v':
+            continue;
+            break;
         }
 
-        tokens[tokens.size() - 1][tokenTypeSize] = '(';
+        return indexOfCurrentToken + lengthOfCurrentToken + i;
+        break;
     }
 
-    // Adding partial token to token vector
-    tokens[tokens.size() - 1][tokenTypeSize + partialTokenCallCount + 1] = tokenValue;
-    partialTokenCallCount++;
-
-    // if
-    if (partialTokenCallCount - 1 == tokenValueSize)
-    {
-        tokens[tokens.size() - 1][(tokenTypeSize + tokenValueSize + 3) - 2] = ')';
-        tokens[tokens.size() - 1][(tokenTypeSize + tokenValueSize + 3) - 1] = '\0';
-        partialTokenCallCount = 0;
-    }
+    return -1;
 }

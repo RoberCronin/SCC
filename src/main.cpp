@@ -4,7 +4,7 @@
 
 int main()
 {
-    File file("tests/test.txt");
+    File file("tests/singlechartokens.txt");
 
     // print out file
     for (int i = 0; i < file.fileLength; i++)
