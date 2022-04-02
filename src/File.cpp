@@ -40,12 +40,13 @@ void File::PrintTokens()
 #undef TOKENTYPE_DEF
         }
 
-        std::cout << ' ';
+        std::cout << " \"";
 
         for (int j = 0; j < token[i].tokenLength; j++)
         {
             std::cout << filePointer[token[i].tokenIndex + j];
         }
+        std::cout <<  "\"    Token Index: " << token[i].tokenIndex << "    Token Length: " << token[i].tokenLength;
         std::cout << std::endl;
     }
 }
