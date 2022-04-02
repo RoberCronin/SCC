@@ -116,7 +116,7 @@ TokenInfo File::GetTokenInfoFromIndex(int index)
     case '>':
     case ',':
     case '\"':
-        tokenInfo.tokenType = SEPARATOR;
+        tokenInfo.tokenType = SEPARATOR_HASH;
         tokenInfo.tokenLength = 1;
         return tokenInfo;
         break;
@@ -146,3 +146,4 @@ int File::GetIndexOfNextToken(int indexOfCurrentToken, int lengthOfCurrentToken)
 
     return -1;
 }
+

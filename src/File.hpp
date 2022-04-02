@@ -9,14 +9,9 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
-enum Keyword {
-#define KEYWORD_DEF(x) x,
-#include "Keyword.txt"
-#undef KEYWORD_DEF
-};
-
 struct TokenInfo
 {
+    int tokenIndex;
     int tokenLength;
     TokenType tokenType;
 };
@@ -47,6 +42,8 @@ private:
     int CheckForKeyword();
 
     int GetIndexOfNextToken(int indexOfLastToken, int lengthOfLastToken);
+
+    void GetAllSeparatorTokens();
 
     bool insideQuotes = false;
 };
