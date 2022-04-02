@@ -9,14 +9,9 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
-enum Keyword {
-#define KEYWORD_DEF(x) x,
-#include "Keyword.txt"
-#undef KEYWORD_DEF
-};
-
 struct TokenInfo
 {
+    int tokenIndex;
     int tokenLength;
     TokenType tokenType;
 };
@@ -28,6 +23,7 @@ public:
     int fileLength;
     int tokenCount = 0;
     std::vector<char*> tokens;
+    std::vector<TokenInfo> token;
 
     File(std::string FilePath);
     ~File();
@@ -42,11 +38,9 @@ private:
 
     void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
 
-    TokenInfo GetTokenInfoFromIndex(int index);
+    void GetAllSeparatorTokens();
 
-    int CheckForKeyword();
+    void GetAllKeywordTokens();
 
-    int GetIndexOfNextToken(int indexOfLastToken, int lengthOfLastToken);
-
-    bool insideQuotes = false;
+    void GetAllOfSingleKeyword(const char* searchString, TokenType tokenType);
 };

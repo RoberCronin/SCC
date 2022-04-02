@@ -4,7 +4,7 @@
 
 int main()
 {
-    File file("tests/singlechartokens.txt");
+    File file("tests/simple.txt");
 
     // print out file
     for (int i = 0; i < file.fileLength; i++)
@@ -15,7 +15,7 @@ int main()
 
     file.Tokenize();
     file.PrintTokens();
-    std::cout << file.tokenCount << " tokens" << std::endl;
+    std::cout << file.token.size() << " tokens" << std::endl;
 
     return 0;
 }
