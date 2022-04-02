@@ -9,6 +9,12 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
+enum Keyword {
+#define KEYWORD_DEF(x) x,
+#include "Keyword.txt"
+#undef KEYWORD_DEF
+};
+
 struct TokenInfo
 {
     int tokenLength;
@@ -37,6 +43,8 @@ private:
     void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
 
     TokenInfo GetTokenInfoFromIndex(int index);
+
+    int CheckForKeyword();
 
     int GetIndexOfNextToken(int indexOfLastToken, int lengthOfLastToken);
 
