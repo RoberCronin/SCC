@@ -1,7 +1,5 @@
-#include <cstring>
 #include <fstream>
 #include <iostream>
-#include <string.h>
 #include <vector>
 
 #include "File.hpp"
