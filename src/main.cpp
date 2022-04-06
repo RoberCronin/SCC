@@ -2,8 +2,14 @@
 
 #include "File.hpp"
 
-int main()
+int main(int argc, char** argv)
 {
+    for (int i = 0; i < argc; i++)
+    {
+        std::cout << argv[i] << std::endl;
+    }
+
+    // File file(argv[1]);
     File file("tests/simple.txt");
 
     // print out file
