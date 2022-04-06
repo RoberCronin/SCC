@@ -44,7 +44,7 @@ void File::PrintTokens()
         {
             std::cout << filePointer[token[i].tokenIndex + j];
         }
-        std::cout <<  "\"    Token Index: " << token[i].tokenIndex << "    Token Length: " << token[i].tokenLength;
+        std::cout << "\"    Token Index: " << token[i].tokenIndex << "    Token Length: " << token[i].tokenLength;
         std::cout << std::endl;
     }
 }
@@ -69,40 +69,40 @@ void File::GetAllSeparatorTokens()
         switch (filePointer[i])
         {
         case '#':
-            token.push_back({i, 1, SEPARATOR_HASH});
+            AddToken(i, 1, SEPARATOR_HASH);
             break;
         case '(':
-            token.push_back({i, 1, SEPARATOR_OPEN_PARENTHESIS});
+            AddToken(i, 1, SEPARATOR_OPEN_PARENTHESIS);
             break;
         case ')':
-            token.push_back({i, 1, SEPARATOR_CLOSE_PARENTHESIS});
+            AddToken(i, 1, SEPARATOR_CLOSE_PARENTHESIS);
             break;
         case '{':
-            token.push_back({i, 1, SEPARATOR_OPEN_CURLY_BRACKET});
+            AddToken(i, 1, SEPARATOR_OPEN_CURLY_BRACKET);
             break;
         case '}':
-            token.push_back({i, 1, SEPARATOR_CLOSE_CURLY_BRACKET});
+            AddToken(i, 1, SEPARATOR_CLOSE_CURLY_BRACKET);
             break;
         case '[':
-            token.push_back({i, 1, SEPARATOR_OPEN_SQUARE_BRACKET});
+            AddToken(i, 1, SEPARATOR_OPEN_SQUARE_BRACKET);
             break;
         case ']':
-            token.push_back({i, 1, SEPARATOR_CLOSE_SQUARE_BRACKET});
+            AddToken(i, 1, SEPARATOR_CLOSE_SQUARE_BRACKET);
             break;
         case ';':
-            token.push_back({i, 1, SEPARATOR_SEMI_COLON});
+            AddToken(i, 1, SEPARATOR_SEMI_COLON);
             break;
         case '<':
-            token.push_back({i, 1, SEPARATOR_ARROW_LEFT});
+            AddToken(i, 1, SEPARATOR_ARROW_LEFT);
             break;
         case '>':
-            token.push_back({i, 1, SEPARATOR_ARROW_RIGHT});
+            AddToken(i, 1, SEPARATOR_ARROW_RIGHT);
             break;
         case ',':
-            token.push_back({i, 1, SEPARATOR_COMMA});
+            AddToken(i, 1, SEPARATOR_COMMA);
             break;
         case '\"':
-            token.push_back({i, 1, SEPARATOR_QUOTE});
+            AddToken(i, 1, SEPARATOR_QUOTE);
             break;
         default:
             break;
@@ -156,7 +156,7 @@ void File::GetAllOfSingleKeyword(const char* searchString, TokenType tokenType)
     {
         if (counter == searchStringLength)
         {
-            token.push_back({i - counter, searchStringLength, tokenType});
+            AddToken(i - counter, searchStringLength, tokenType);
             counter = 0;
         }
 
@@ -174,4 +174,9 @@ void File::GetAllOfSingleKeyword(const char* searchString, TokenType tokenType)
             counter = 0;
         }
     }
+}
+
+void File::AddToken(int tokenIndex, int tokenLength, TokenType tokenType)
+{
+    token.push_back({tokenIndex, tokenLength, tokenType});
 }

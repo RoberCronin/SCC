@@ -43,4 +43,6 @@ private:
     void GetAllKeywordTokens();
 
     void GetAllOfSingleKeyword(const char* searchString, TokenType tokenType);
+
+    void AddToken(int tokenIndex, int tokenLength, TokenType tokenType);
 };
