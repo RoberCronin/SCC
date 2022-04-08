@@ -67,13 +67,6 @@ void File::OpenFile(std::string FilePath)
     filePointer = buffer;
 }
 
-void File::GetAllSeparatorTokens()
-{
-    for (int i = 0; i < fileLength; i++)
-    {
-    }
-}
-
 void File::SearchForSeparatorTokens(const int& index)
 {
     switch (filePointer[index])

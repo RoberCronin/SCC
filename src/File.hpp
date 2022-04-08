@@ -51,22 +51,15 @@ public:
     void PrintTokens();
 
 private:
-    // Opens file, and saves data to filePointer, and saves length of file in length
-    void OpenFile(std::string FilePath);
-
-    void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
-
-    void GetAllSeparatorTokens();
-
     void SearchForKeywordTokens(const int& index);
 
     void SearchForSeparatorTokens(const int& index);
 
+    int keywordCharMatchCounter[31];
     void SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index);
 
-    void SearchSeparatorTokens(const int& index);
-
-    int keywordCharMatchCounter[31];
-
     void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
+
+    // Opens file, and saves data to filePointer, and saves length of file in length
+    void OpenFile(std::string FilePath);
 };
