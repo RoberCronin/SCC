@@ -43,7 +43,7 @@ public:
     std::vector<char*> tokens;
     std::vector<TokenInfo> token;
 
-    File(std::string FilePath);
+    File(const char* FilePath);
     ~File();
 
     void Tokenize();
@@ -61,5 +61,5 @@ private:
     void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 
     // Opens file, and saves data to filePointer, and saves length of file in length
-    void OpenFile(std::string FilePath);
+    void OpenFile(const char* FilePath);
 };

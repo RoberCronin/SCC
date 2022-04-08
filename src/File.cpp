@@ -4,7 +4,7 @@
 
 #include "File.hpp"
 
-File::File(std::string FilePath)
+File::File(const char* FilePath)
 {
     OpenFile(FilePath);
     for (int i = 0; i < 31; i++)
@@ -54,7 +54,7 @@ void File::PrintTokens()
     }
 }
 
-void File::OpenFile(std::string FilePath)
+void File::OpenFile(const char* FilePath)
 {
     std::ifstream t;
     t.open(FilePath);                    // open input file
