@@ -58,15 +58,15 @@ private:
 
     void GetAllSeparatorTokens();
 
-    void SearchForKeywordTokens(int index);
+    void SearchForKeywordTokens(const int& index);
 
-    void SearchForSeparatorTokens(int index);
+    void SearchForSeparatorTokens(const int& index);
 
-    void SearchForSingleKeyword(const char* searchString, KeywordToken tokenType, int index);
+    void SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index);
 
     void SearchSeparatorTokens(const int& index);
 
     int keywordCharMatchCounter[31];
 
-    void AddToken(int tokenIndex, int tokenLength, TokenType tokenType);
+    void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 };

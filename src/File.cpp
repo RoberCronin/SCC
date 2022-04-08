@@ -74,7 +74,7 @@ void File::GetAllSeparatorTokens()
     }
 }
 
-void File::SearchForSeparatorTokens(int index)
+void File::SearchForSeparatorTokens(const int& index)
 {
     switch (filePointer[index])
     {
@@ -119,7 +119,7 @@ void File::SearchForSeparatorTokens(int index)
     }
 }
 
-void File::SearchForKeywordTokens(int index)
+void File::SearchForKeywordTokens(const int& index)
 {
     SearchForSingleKeyword("auto", KEYWORD_AUTO, index);
     SearchForSingleKeyword("double", KEYWORD_DOUBLE, index);
@@ -154,7 +154,7 @@ void File::SearchForKeywordTokens(int index)
     SearchForSingleKeyword("unsigned", KEYWORD_UNSIGNED, index);
 }
 
-void File::SearchForSingleKeyword(const char* searchString, KeywordToken tokenType, int index)
+void File::SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index)
 {
     int searchStringLength = 0;
     while (searchString[searchStringLength] != '\0') searchStringLength++;
@@ -175,7 +175,7 @@ void File::SearchForSingleKeyword(const char* searchString, KeywordToken tokenTy
     }
 }
 
-void File::AddToken(int tokenIndex, int tokenLength, TokenType tokenType)
+void File::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
 {
     token.push_back({tokenIndex, tokenLength, tokenType});
 }
