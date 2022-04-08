@@ -9,6 +9,24 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
+enum SeparatorToken {
+#define TOKENTYPE_DEF(x) x,
+#include "SeparatorTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
+enum KeywordToken {
+#define TOKENTYPE_DEF(x) x,
+#include "KeywordTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
+enum ConstantTokens {
+#define TOKENTYPE_DEF(x) x,
+#include "ConstantTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
 struct TokenInfo
 {
     int tokenIndex;
@@ -40,9 +58,15 @@ private:
 
     void GetAllSeparatorTokens();
 
-    void GetAllKeywordTokens();
+    void SearchForKeywordTokens(int index);
 
-    void GetAllOfSingleKeyword(const char* searchString, TokenType tokenType);
+    void SearchForSeparatorTokens(int index);
+
+    void SearchForSingleKeyword(const char* searchString, KeywordToken tokenType, int index);
+
+    void SearchSeparatorTokens(const int& index);
+
+    int keywordCharMatchCounter[31];
 
     void AddToken(int tokenIndex, int tokenLength, TokenType tokenType);
 };
