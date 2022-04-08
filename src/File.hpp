@@ -9,6 +9,24 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
+enum SeparatorToken {
+#define TOKENTYPE_DEF(x) x,
+#include "SeparatorTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
+enum KeywordToken {
+#define TOKENTYPE_DEF(x) x,
+#include "KeywordTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
+enum ConstantTokens {
+#define TOKENTYPE_DEF(x) x,
+#include "ConstantTokens.txt"
+#undef TOKENTYPE_DEF
+};
+
 struct TokenInfo
 {
     int tokenIndex;
@@ -33,16 +51,15 @@ public:
     void PrintTokens();
 
 private:
+    void SearchForKeywordTokens(const int& index);
+
+    void SearchForSeparatorTokens(const int& index);
+
+    int keywordCharMatchCounter[31];
+    void SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index);
+
+    void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
+
     // Opens file, and saves data to filePointer, and saves length of file in length
     void OpenFile(std::string FilePath);
-
-    void AddToken(TokenType tokenType, int tokenIndex, int tokenValueSize);
-
-    void GetAllSeparatorTokens();
-
-    void GetAllKeywordTokens();
-
-    void GetAllOfSingleKeyword(const char* searchString, TokenType tokenType);
-
-    void AddToken(int tokenIndex, int tokenLength, TokenType tokenType);
 };

@@ -7,6 +7,10 @@
 File::File(std::string FilePath)
 {
     OpenFile(FilePath);
+    for (int i = 0; i < 31; i++)
+    {
+        keywordCharMatchCounter[i] = 0;
+    }
 }
 
 File::~File()
@@ -16,10 +20,11 @@ File::~File()
 
 void File::Tokenize()
 {
-    TokenInfo tokenInfo;
-
-    GetAllSeparatorTokens();
-    GetAllKeywordTokens();
+    for (int i = 0; i < fileLength; i++)
+    {
+        SearchForSeparatorTokens(i);
+        SearchForKeywordTokens(i);
+    }
 }
 
 void File::PrintTokens()
@@ -62,121 +67,108 @@ void File::OpenFile(std::string FilePath)
     filePointer = buffer;
 }
 
-void File::GetAllSeparatorTokens()
+void File::SearchForSeparatorTokens(const int& index)
 {
-    for (int i = 0; i < fileLength; i++)
+    switch (filePointer[index])
     {
-        switch (filePointer[i])
-        {
-        case '#':
-            AddToken(i, 1, SEPARATOR_HASH);
-            break;
-        case '(':
-            AddToken(i, 1, SEPARATOR_OPEN_PARENTHESIS);
-            break;
-        case ')':
-            AddToken(i, 1, SEPARATOR_CLOSE_PARENTHESIS);
-            break;
-        case '{':
-            AddToken(i, 1, SEPARATOR_OPEN_CURLY_BRACKET);
-            break;
-        case '}':
-            AddToken(i, 1, SEPARATOR_CLOSE_CURLY_BRACKET);
-            break;
-        case '[':
-            AddToken(i, 1, SEPARATOR_OPEN_SQUARE_BRACKET);
-            break;
-        case ']':
-            AddToken(i, 1, SEPARATOR_CLOSE_SQUARE_BRACKET);
-            break;
-        case ';':
-            AddToken(i, 1, SEPARATOR_SEMI_COLON);
-            break;
-        case '<':
-            AddToken(i, 1, SEPARATOR_ARROW_LEFT);
-            break;
-        case '>':
-            AddToken(i, 1, SEPARATOR_ARROW_RIGHT);
-            break;
-        case ',':
-            AddToken(i, 1, SEPARATOR_COMMA);
-            break;
-        case '\"':
-            AddToken(i, 1, SEPARATOR_QUOTE);
-            break;
-        default:
-            break;
-        }
+    case '#':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '(':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case ')':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '{':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '}':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '[':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case ']':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case ';':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '<':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '>':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case ',':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    case '\"':
+        AddToken(index, 1, SEPARATOR);
+        break;
+    default:
+        break;
     }
 }
 
-void File::GetAllKeywordTokens()
+void File::SearchForKeywordTokens(const int& index)
 {
-    GetAllOfSingleKeyword("auto", KEYWORD_AUTO);
-    GetAllOfSingleKeyword("double", KEYWORD_DOUBLE);
-    GetAllOfSingleKeyword("int", KEYWORD_INT);
-    GetAllOfSingleKeyword("struct", KEYWORD_STRUCT);
-    GetAllOfSingleKeyword("break", KEYWORD_BREAK);
-    GetAllOfSingleKeyword("else", KEYWORD_ELSE);
-    GetAllOfSingleKeyword("longswitch", KEYWORD_LONGSWITCH);
-    GetAllOfSingleKeyword("case", KEYWORD_CASE);
-    GetAllOfSingleKeyword("enum", KEYWORD_ENUM);
-    GetAllOfSingleKeyword("register", KEYWORD_REGISTER);
-    GetAllOfSingleKeyword("typedef", KEYWORD_TYPEDEF);
-    GetAllOfSingleKeyword("char", KEYWORD_CHAR);
-    GetAllOfSingleKeyword("extern", KEYWORD_EXTERN);
-    GetAllOfSingleKeyword("return", KEYWORD_RETURN);
-    GetAllOfSingleKeyword("union", KEYWORD_UNION);
-    GetAllOfSingleKeyword("continue", KEYWORD_CONTINUE);
-    GetAllOfSingleKeyword("for", KEYWORD_FOR);
-    GetAllOfSingleKeyword("signed", KEYWORD_SIGNED);
-    GetAllOfSingleKeyword("void", KEYWORD_VOID);
-    GetAllOfSingleKeyword("do", KEYWORD_DO);
-    GetAllOfSingleKeyword("if", KEYWORD_IF);
-    GetAllOfSingleKeyword("static", KEYWORD_STATIC);
-    GetAllOfSingleKeyword("while", KEYWORD_WHILE);
-    GetAllOfSingleKeyword("default", KEYWORD_DEFAULT);
-    GetAllOfSingleKeyword("goto", KEYWORD_GOTO);
-    GetAllOfSingleKeyword("sizeof", KEYWORD_SIZEOF);
-    GetAllOfSingleKeyword("volatile", KEYWORD_VOLATILE);
-    GetAllOfSingleKeyword("const", KEYWORD_CONST);
-    GetAllOfSingleKeyword("float", KEYWORD_FLOAT);
-    GetAllOfSingleKeyword("short", KEYWORD_SHORT);
-    GetAllOfSingleKeyword("unsigned", KEYWORD_UNSIGNED);
+    SearchForSingleKeyword("auto", KEYWORD_AUTO, index);
+    SearchForSingleKeyword("double", KEYWORD_DOUBLE, index);
+    SearchForSingleKeyword("int", KEYWORD_INT, index);
+    SearchForSingleKeyword("struct", KEYWORD_STRUCT, index);
+    SearchForSingleKeyword("break", KEYWORD_BREAK, index);
+    SearchForSingleKeyword("else", KEYWORD_ELSE, index);
+    SearchForSingleKeyword("longswitch", KEYWORD_LONGSWITCH, index);
+    SearchForSingleKeyword("case", KEYWORD_CASE, index);
+    SearchForSingleKeyword("enum", KEYWORD_ENUM, index);
+    SearchForSingleKeyword("register", KEYWORD_REGISTER, index);
+    SearchForSingleKeyword("typedef", KEYWORD_TYPEDEF, index);
+    SearchForSingleKeyword("char", KEYWORD_CHAR, index);
+    SearchForSingleKeyword("extern", KEYWORD_EXTERN, index);
+    SearchForSingleKeyword("return", KEYWORD_RETURN, index);
+    SearchForSingleKeyword("union", KEYWORD_UNION, index);
+    SearchForSingleKeyword("continue", KEYWORD_CONTINUE, index);
+    SearchForSingleKeyword("for", KEYWORD_FOR, index);
+    SearchForSingleKeyword("signed", KEYWORD_SIGNED, index);
+    SearchForSingleKeyword("void", KEYWORD_VOID, index);
+    SearchForSingleKeyword("do", KEYWORD_DO, index);
+    SearchForSingleKeyword("if", KEYWORD_IF, index);
+    SearchForSingleKeyword("static", KEYWORD_STATIC, index);
+    SearchForSingleKeyword("while", KEYWORD_WHILE, index);
+    SearchForSingleKeyword("default", KEYWORD_DEFAULT, index);
+    SearchForSingleKeyword("goto", KEYWORD_GOTO, index);
+    SearchForSingleKeyword("sizeof", KEYWORD_SIZEOF, index);
+    SearchForSingleKeyword("volatile", KEYWORD_VOLATILE, index);
+    SearchForSingleKeyword("const", KEYWORD_CONST, index);
+    SearchForSingleKeyword("float", KEYWORD_FLOAT, index);
+    SearchForSingleKeyword("short", KEYWORD_SHORT, index);
+    SearchForSingleKeyword("unsigned", KEYWORD_UNSIGNED, index);
 }
 
-void File::GetAllOfSingleKeyword(const char* searchString, TokenType tokenType)
+void File::SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index)
 {
-    int counter = 0;
-
     int searchStringLength = 0;
     while (searchString[searchStringLength] != '\0') searchStringLength++;
 
-    for (int i = 0; i < fileLength; i++)
+    if (keywordCharMatchCounter[(int)tokenType] == searchStringLength)
     {
-        if (counter == searchStringLength)
-        {
-            AddToken(i - counter, searchStringLength, tokenType);
-            counter = 0;
-        }
+        AddToken(index - keywordCharMatchCounter[(int)tokenType], searchStringLength, KEYWORD);
+        keywordCharMatchCounter[(int)tokenType] = 0;
+    }
 
-        if (searchString[counter] == filePointer[i])
-        {
-            counter++;
-        }
-        else
-        {
-            // Special case where character preceding the i'th character is duplicate
-            if (counter > 0)
-            {
-                i -= counter;
-            }
-            counter = 0;
-        }
+    if (searchString[keywordCharMatchCounter[(int)tokenType]] == filePointer[index])
+    {
+        keywordCharMatchCounter[(int)tokenType]++;
+    }
+    else
+    {
+        keywordCharMatchCounter[(int)tokenType] = 0;
     }
 }
 
-void File::AddToken(int tokenIndex, int tokenLength, TokenType tokenType)
+void File::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
 {
     token.push_back({tokenIndex, tokenLength, tokenType});
 }
