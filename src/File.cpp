@@ -24,6 +24,7 @@ void File::Tokenize()
     {
         SearchForSeparatorTokens(i);
         SearchForKeywordTokens(i);
+        SearchForIdentifierTokens(i);
     }
 }
 
@@ -69,46 +70,10 @@ void File::OpenFile(const char* FilePath)
 
 void File::SearchForSeparatorTokens(const int& index)
 {
-    switch (filePointer[index])
+
+    if (CharAtIndexIsSeparator(index))
     {
-    case '#':
         AddToken(index, 1, SEPARATOR);
-        break;
-    case '(':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case ')':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '{':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '}':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '[':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case ']':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case ';':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '<':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '>':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case ',':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    case '\"':
-        AddToken(index, 1, SEPARATOR);
-        break;
-    default:
-        break;
     }
 }
 
@@ -165,6 +130,32 @@ void File::SearchForSingleKeyword(const char* searchString, const KeywordToken& 
     else
     {
         keywordCharMatchCounter[(int)tokenType] = 0;
+    }
+}
+
+void File::SearchForIdentifierTokens(const int& index) {}
+
+bool File::CharAtIndexIsSeparator(const int& index)
+{
+    switch (filePointer[index])
+    {
+    case '#':
+    case '(':
+    case ')':
+    case '{':
+    case '}':
+    case '[':
+    case ']':
+    case ';':
+    case '<':
+    case '>':
+    case ',':
+    case '\"':
+        return true;
+        break;
+    default:
+        return false;
+        break;
     }
 }
 

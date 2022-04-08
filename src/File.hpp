@@ -58,6 +58,10 @@ private:
     int keywordCharMatchCounter[31];
     void SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index);
 
+    void SearchForIdentifierTokens(const int& index);
+
+    bool CharAtIndexIsSeparator(const int& index);
+
     void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 
     // Opens file, and saves data to filePointer, and saves length of file in length
