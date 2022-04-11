@@ -9,7 +9,7 @@ int main(int argc, char** argv)
         std::cout << argv[i] << std::endl;
     }
 
-    // File file(argv[1]);
+    //File file(argv[1]);
     File file("tests/simple.txt");
 
     // print out file

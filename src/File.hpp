@@ -9,24 +9,6 @@ enum TokenType {
 #undef TOKENTYPE_DEF
 };
 
-enum SeparatorToken {
-#define TOKENTYPE_DEF(x) x,
-#include "SeparatorTokens.txt"
-#undef TOKENTYPE_DEF
-};
-
-enum KeywordToken {
-#define TOKENTYPE_DEF(x) x,
-#include "KeywordTokens.txt"
-#undef TOKENTYPE_DEF
-};
-
-enum ConstantTokens {
-#define TOKENTYPE_DEF(x) x,
-#include "ConstantTokens.txt"
-#undef TOKENTYPE_DEF
-};
-
 struct TokenInfo
 {
     int tokenIndex;
@@ -43,7 +25,7 @@ public:
     std::vector<char*> tokens;
     std::vector<TokenInfo> token;
 
-    File(std::string FilePath);
+    File(const char* FilePath);
     ~File();
 
     void Tokenize();
@@ -51,15 +33,23 @@ public:
     void PrintTokens();
 
 private:
-    void SearchForKeywordTokens(const int& index);
-
-    void SearchForSeparatorTokens(const int& index);
-
-    int keywordCharMatchCounter[31];
-    void SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index);
+    int currentTokenLength = 0;
+    void SearchForConsecutiveChars(const int& index);
 
     void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 
+    void ChangeKeywordsToCorrectTokenType();
+
+    void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
+
+    bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength);
+
+    bool CharAtIndexIsSeparator(const int& index);
+
+    bool CharAtIndexIsWhitespace(const int& index);
+
+    TokenType GetSeparatorTokenTypeFromIndex(const int& index);
+
     // Opens file, and saves data to filePointer, and saves length of file in length
-    void OpenFile(std::string FilePath);
+    void OpenFile(const char* FilePath);
 };
