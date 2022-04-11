@@ -7,10 +7,6 @@
 File::File(const char* FilePath)
 {
     OpenFile(FilePath);
-    for (int i = 0; i < 31; i++)
-    {
-        keywordCharMatchCounter[i] = 0;
-    }
 }
 
 File::~File()
@@ -22,10 +18,11 @@ void File::Tokenize()
 {
     for (int i = 0; i < fileLength; i++)
     {
-        SearchForSeparatorTokens(i);
-        SearchForKeywordTokens(i);
-        SearchForIdentifierTokens(i);
+        SearchForConsecutiveChars(i);
+        if (CharAtIndexIsSeparator(i)) AddToken(i, 1, GetSeparatorTokenTypeFromIndex(i));
     }
+
+    ChangeTokenTypeOfKeyword("return", KEYWORD_RETURN);
 }
 
 void File::PrintTokens()
@@ -68,72 +65,17 @@ void File::OpenFile(const char* FilePath)
     filePointer = buffer;
 }
 
-void File::SearchForSeparatorTokens(const int& index)
+void File::SearchForConsecutiveChars(const int& index)
 {
-
-    if (CharAtIndexIsSeparator(index))
+    if (!(CharAtIndexIsSeparator(index) || CharAtIndexIsWhitespace(index)))
     {
-        AddToken(index, 1, SEPARATOR);
+        currentTokenLength++;
+        return;
     }
+
+    if (currentTokenLength != 0) AddToken(index - currentTokenLength, currentTokenLength, NO_TOKEN);
+    currentTokenLength = 0;
 }
-
-void File::SearchForKeywordTokens(const int& index)
-{
-    SearchForSingleKeyword("auto", KEYWORD_AUTO, index);
-    SearchForSingleKeyword("double", KEYWORD_DOUBLE, index);
-    SearchForSingleKeyword("int", KEYWORD_INT, index);
-    SearchForSingleKeyword("struct", KEYWORD_STRUCT, index);
-    SearchForSingleKeyword("break", KEYWORD_BREAK, index);
-    SearchForSingleKeyword("else", KEYWORD_ELSE, index);
-    SearchForSingleKeyword("longswitch", KEYWORD_LONGSWITCH, index);
-    SearchForSingleKeyword("case", KEYWORD_CASE, index);
-    SearchForSingleKeyword("enum", KEYWORD_ENUM, index);
-    SearchForSingleKeyword("register", KEYWORD_REGISTER, index);
-    SearchForSingleKeyword("typedef", KEYWORD_TYPEDEF, index);
-    SearchForSingleKeyword("char", KEYWORD_CHAR, index);
-    SearchForSingleKeyword("extern", KEYWORD_EXTERN, index);
-    SearchForSingleKeyword("return", KEYWORD_RETURN, index);
-    SearchForSingleKeyword("union", KEYWORD_UNION, index);
-    SearchForSingleKeyword("continue", KEYWORD_CONTINUE, index);
-    SearchForSingleKeyword("for", KEYWORD_FOR, index);
-    SearchForSingleKeyword("signed", KEYWORD_SIGNED, index);
-    SearchForSingleKeyword("void", KEYWORD_VOID, index);
-    SearchForSingleKeyword("do", KEYWORD_DO, index);
-    SearchForSingleKeyword("if", KEYWORD_IF, index);
-    SearchForSingleKeyword("static", KEYWORD_STATIC, index);
-    SearchForSingleKeyword("while", KEYWORD_WHILE, index);
-    SearchForSingleKeyword("default", KEYWORD_DEFAULT, index);
-    SearchForSingleKeyword("goto", KEYWORD_GOTO, index);
-    SearchForSingleKeyword("sizeof", KEYWORD_SIZEOF, index);
-    SearchForSingleKeyword("volatile", KEYWORD_VOLATILE, index);
-    SearchForSingleKeyword("const", KEYWORD_CONST, index);
-    SearchForSingleKeyword("float", KEYWORD_FLOAT, index);
-    SearchForSingleKeyword("short", KEYWORD_SHORT, index);
-    SearchForSingleKeyword("unsigned", KEYWORD_UNSIGNED, index);
-}
-
-void File::SearchForSingleKeyword(const char* searchString, const KeywordToken& tokenType, const int& index)
-{
-    int searchStringLength = 0;
-    while (searchString[searchStringLength] != '\0') searchStringLength++;
-
-    if (keywordCharMatchCounter[(int)tokenType] == searchStringLength)
-    {
-        AddToken(index - keywordCharMatchCounter[(int)tokenType], searchStringLength, KEYWORD);
-        keywordCharMatchCounter[(int)tokenType] = 0;
-    }
-
-    if (searchString[keywordCharMatchCounter[(int)tokenType]] == filePointer[index])
-    {
-        keywordCharMatchCounter[(int)tokenType]++;
-    }
-    else
-    {
-        keywordCharMatchCounter[(int)tokenType] = 0;
-    }
-}
-
-void File::SearchForIdentifierTokens(const int& index) {}
 
 bool File::CharAtIndexIsSeparator(const int& index)
 {
@@ -157,6 +99,94 @@ bool File::CharAtIndexIsSeparator(const int& index)
         return false;
         break;
     }
+}
+
+bool File::CharAtIndexIsWhitespace(const int& index)
+{
+    switch (filePointer[index])
+    {
+    case ' ':
+    case '\n':
+    case '\t':
+    case '\v':
+        return true;
+        break;
+    default:
+        return false;
+        break;
+    }
+}
+
+void File::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType)
+{
+    for (int i = 0; i < token.size(); i++)
+    {
+        int counter = 0;
+        int searchStringLength = 0;
+        while (searchString[searchStringLength] != '\0') searchStringLength++;
+
+        if (CompareStringToToken(searchString, searchStringLength, token[i].tokenIndex, token[i].tokenLength))
+        {
+            token[i].tokenType = tokenType;
+        }
+    }
+}
+
+TokenType File::GetSeparatorTokenTypeFromIndex(const int& index)
+{
+    switch (filePointer[index])
+    {
+    case '#':
+        return SEPARATOR_HASH;
+        break;
+    case '(':
+        return SEPARATOR_OPEN_PARENTHESIS;
+        break;
+    case ')':
+        return SEPARATOR_CLOSE_PARENTHESIS;
+        break;
+    case '{':
+        return SEPARATOR_OPEN_CURLY_BRACKET;
+        break;
+    case '}':
+        return SEPARATOR_CLOSE_CURLY_BRACKET;
+        break;
+    case '[':
+        return SEPARATOR_OPEN_SQUARE_BRACKET;
+        break;
+    case ']':
+        return SEPARATOR_CLOSE_SQUARE_BRACKET;
+        break;
+    case ';':
+        return SEPARATOR_SEMI_COLON;
+        break;
+    case '<':
+        return SEPARATOR_ARROW_LEFT;
+        break;
+    case '>':
+        return SEPARATOR_ARROW_RIGHT;
+        break;
+    case ',':
+        return SEPARATOR_COMMA;
+        break;
+    case '\"':
+        return SEPARATOR_CLOSE_PARENTHESIS;
+        break;
+    default:
+        return NO_TOKEN;
+        break;
+    }
+}
+
+bool File::CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength)
+{
+    if (str1Length != tokenLength) return false;
+    for (int i = 0; i < str1Length; i++)
+    {
+        if (str1[i] != filePointer[i + indexOfToken]) return false;
+    }
+
+    return true;
 }
 
 void File::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
