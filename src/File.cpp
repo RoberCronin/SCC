@@ -117,6 +117,41 @@ bool File::CharAtIndexIsWhitespace(const int& index)
     }
 }
 
+void File::ChangeKeywordsToCorrectTokenType()
+{
+    ChangeTokenTypeOfKeyword("auto", KEYWORD_AUTO);
+    ChangeTokenTypeOfKeyword("double", KEYWORD_DOUBLE);
+    ChangeTokenTypeOfKeyword("int", KEYWORD_INT);
+    ChangeTokenTypeOfKeyword("struct", KEYWORD_STRUCT);
+    ChangeTokenTypeOfKeyword("break", KEYWORD_BREAK);
+    ChangeTokenTypeOfKeyword("else", KEYWORD_ELSE);
+    ChangeTokenTypeOfKeyword("longswitch", KEYWORD_LONGSWITCH);
+    ChangeTokenTypeOfKeyword("case", KEYWORD_CASE);
+    ChangeTokenTypeOfKeyword("enum", KEYWORD_ENUM);
+    ChangeTokenTypeOfKeyword("register", KEYWORD_REGISTER);
+    ChangeTokenTypeOfKeyword("typedef", KEYWORD_TYPEDEF);
+    ChangeTokenTypeOfKeyword("char", KEYWORD_CHAR);
+    ChangeTokenTypeOfKeyword("extern", KEYWORD_EXTERN);
+    ChangeTokenTypeOfKeyword("return", KEYWORD_RETURN);
+    ChangeTokenTypeOfKeyword("union", KEYWORD_UNION);
+    ChangeTokenTypeOfKeyword("continue", KEYWORD_CONTINUE);
+    ChangeTokenTypeOfKeyword("for", KEYWORD_FOR);
+    ChangeTokenTypeOfKeyword("signed", KEYWORD_SIGNED);
+    ChangeTokenTypeOfKeyword("void", KEYWORD_VOID);
+    ChangeTokenTypeOfKeyword("do", KEYWORD_DO);
+    ChangeTokenTypeOfKeyword("if", KEYWORD_IF);
+    ChangeTokenTypeOfKeyword("static", KEYWORD_STATIC);
+    ChangeTokenTypeOfKeyword("while", KEYWORD_WHILE);
+    ChangeTokenTypeOfKeyword("default", KEYWORD_DEFAULT);
+    ChangeTokenTypeOfKeyword("goto", KEYWORD_GOTO);
+    ChangeTokenTypeOfKeyword("sizeof", KEYWORD_SIZEOF);
+    ChangeTokenTypeOfKeyword("volatile", KEYWORD_VOLATILE);
+    ChangeTokenTypeOfKeyword("const", KEYWORD_CONST);
+    ChangeTokenTypeOfKeyword("float", KEYWORD_FLOAT);
+    ChangeTokenTypeOfKeyword("short", KEYWORD_SHORT);
+    ChangeTokenTypeOfKeyword("unsigned", KEYWORD_UNSIGNED);
+}
+
 void File::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType)
 {
     for (int i = 0; i < token.size(); i++)

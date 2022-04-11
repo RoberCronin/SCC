@@ -38,6 +38,8 @@ private:
 
     void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 
+    void ChangeKeywordsToCorrectTokenType();
+
     void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
 
     bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength);
@@ -47,7 +49,6 @@ private:
     bool CharAtIndexIsWhitespace(const int& index);
 
     TokenType GetSeparatorTokenTypeFromIndex(const int& index);
-
 
     // Opens file, and saves data to filePointer, and saves length of file in length
     void OpenFile(const char* FilePath);
