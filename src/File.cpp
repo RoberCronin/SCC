@@ -22,7 +22,7 @@ void File::Tokenize()
         if (CharAtIndexIsSeparator(i)) AddToken(i, 1, GetSeparatorTokenTypeFromIndex(i));
     }
 
-    ChangeTokenTypeOfKeyword("return", KEYWORD_RETURN);
+    ChangeKeywordsToCorrectTokenType();
 }
 
 void File::PrintTokens()
