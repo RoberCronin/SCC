@@ -2,19 +2,19 @@
 #include <iostream>
 #include <vector>
 
-#include "File.hpp"
+#include "Tokenizer.hpp"
 
-File::File(const char* FilePath)
+Tokenizer::Tokenizer(const char* FilePath)
 {
     OpenFile(FilePath);
 }
 
-File::~File()
+Tokenizer::~Tokenizer()
 {
     delete[] filePointer;
 }
 
-void File::Tokenize()
+void Tokenizer::Tokenize()
 {
     for (int i = 0; i < fileLength; i++)
     {
@@ -26,7 +26,7 @@ void File::Tokenize()
     ChangeIntegersToCorrectTokenType();
 }
 
-void File::PrintTokens()
+void Tokenizer::PrintTokens()
 {
     for (int i = 0; i < token.size(); i++)
     {
@@ -53,7 +53,7 @@ void File::PrintTokens()
     }
 }
 
-void File::OpenFile(const char* FilePath)
+void Tokenizer::OpenFile(const char* FilePath)
 {
     std::ifstream t;
     t.open(FilePath);                    // open input file
@@ -66,7 +66,7 @@ void File::OpenFile(const char* FilePath)
     filePointer = buffer;
 }
 
-void File::SearchForConsecutiveChars(const int& index)
+void Tokenizer::SearchForConsecutiveChars(const int& index)
 {
     if (!(CharAtIndexIsSeparator(index) || CharAtIndexIsWhitespace(index)))
     {
@@ -78,7 +78,7 @@ void File::SearchForConsecutiveChars(const int& index)
     currentTokenLength = 0;
 }
 
-bool File::CharAtIndexIsSeparator(const int& index)
+bool Tokenizer::CharAtIndexIsSeparator(const int& index)
 {
     switch (filePointer[index])
     {
@@ -102,7 +102,7 @@ bool File::CharAtIndexIsSeparator(const int& index)
     }
 }
 
-bool File::CharAtIndexIsWhitespace(const int& index)
+bool Tokenizer::CharAtIndexIsWhitespace(const int& index)
 {
     switch (filePointer[index])
     {
@@ -118,7 +118,7 @@ bool File::CharAtIndexIsWhitespace(const int& index)
     }
 }
 
-void File::ChangeIntegersToCorrectTokenType()
+void Tokenizer::ChangeIntegersToCorrectTokenType()
 {
     for (int i = 0; i < token.size(); i++)
     {
@@ -126,7 +126,7 @@ void File::ChangeIntegersToCorrectTokenType()
     }
 }
 
-bool File::IsTokenInteger(const int& indexOfToken)
+bool Tokenizer::IsTokenInteger(const int& indexOfToken)
 {
     for (int i = 0; i < token[indexOfToken].tokenLength; i++)
     {
@@ -151,7 +151,7 @@ bool File::IsTokenInteger(const int& indexOfToken)
     return true;
 }
 
-void File::ChangeKeywordsToCorrectTokenType()
+void Tokenizer::ChangeKeywordsToCorrectTokenType()
 {
     ChangeTokenTypeOfKeyword("auto", KEYWORD_AUTO);
     ChangeTokenTypeOfKeyword("double", KEYWORD_DOUBLE);
@@ -186,7 +186,7 @@ void File::ChangeKeywordsToCorrectTokenType()
     ChangeTokenTypeOfKeyword("unsigned", KEYWORD_UNSIGNED);
 }
 
-void File::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType)
+void Tokenizer::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType)
 {
     for (int i = 0; i < token.size(); i++)
     {
@@ -201,7 +201,7 @@ void File::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& t
     }
 }
 
-TokenType File::GetSeparatorTokenTypeFromIndex(const int& index)
+TokenType Tokenizer::GetSeparatorTokenTypeFromIndex(const int& index)
 {
     switch (filePointer[index])
     {
@@ -247,7 +247,7 @@ TokenType File::GetSeparatorTokenTypeFromIndex(const int& index)
     }
 }
 
-bool File::CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength)
+bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength)
 {
     if (str1Length != tokenLength) return false;
     for (int i = 0; i < str1Length; i++)
@@ -258,7 +258,7 @@ bool File::CompareStringToToken(const char* str1, const int& str1Length, const i
     return true;
 }
 
-void File::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
+void Tokenizer::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
 {
     token.push_back({tokenIndex, tokenLength, tokenType});
 }

@@ -16,7 +16,7 @@ struct TokenInfo
     TokenType tokenType;
 };
 
-class File
+class Tokenizer
 {
 public:
     char* filePointer;
@@ -25,8 +25,8 @@ public:
     std::vector<char*> tokens;
     std::vector<TokenInfo> token;
 
-    File(const char* FilePath);
-    ~File();
+    Tokenizer(const char* FilePath);
+    ~Tokenizer();
 
     void Tokenize();
 

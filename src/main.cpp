@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "File.hpp"
+#include "Tokenizer.hpp"
 
 int main(int argc, char** argv)
 {
@@ -10,7 +10,7 @@ int main(int argc, char** argv)
     }
 
     //File file(argv[1]);
-    File file("tests/simple.txt");
+    Tokenizer file("tests/simple.txt");
 
     // print out file
     for (int i = 0; i < file.fileLength; i++)
