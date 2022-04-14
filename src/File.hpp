@@ -42,6 +42,10 @@ private:
 
     void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
 
+    void ChangeIntegersToCorrectTokenType();
+
+    bool IsTokenInteger(const int& indexOfToken);
+
     bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength);
 
     bool CharAtIndexIsSeparator(const int& index);

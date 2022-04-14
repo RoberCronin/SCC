@@ -23,6 +23,7 @@ void File::Tokenize()
     }
 
     ChangeKeywordsToCorrectTokenType();
+    ChangeIntegersToCorrectTokenType();
 }
 
 void File::PrintTokens()
@@ -115,6 +116,39 @@ bool File::CharAtIndexIsWhitespace(const int& index)
         return false;
         break;
     }
+}
+
+void File::ChangeIntegersToCorrectTokenType()
+{
+    for (int i = 0; i < token.size(); i++)
+    {
+        if (IsTokenInteger(i)) token[i].tokenType = CONSTANAT_INTEGER;
+    }
+}
+
+bool File::IsTokenInteger(const int& indexOfToken)
+{
+    for (int i = 0; i < token[indexOfToken].tokenLength; i++)
+    {
+        switch (filePointer[i + token[indexOfToken].tokenIndex])
+        {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            break;
+        default:
+            return false;
+            break;
+        }
+    }
+    return true;
 }
 
 void File::ChangeKeywordsToCorrectTokenType()
