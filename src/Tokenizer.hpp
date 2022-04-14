@@ -18,9 +18,10 @@ struct TokenInfo
 class Tokenizer
 {
 public:
+    // Pointer to the beginning of the file, can be accsessed like an array
     char* fileChars;
+    // Length of the file, in bytes/chars
     int fileLength;
-    int tokenCount = 0;
     std::vector<TokenInfo> tokens;
 
     Tokenizer(const char* FilePath);
