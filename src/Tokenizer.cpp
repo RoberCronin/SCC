@@ -194,7 +194,7 @@ void Tokenizer::ChangeTokenTypeOfKeyword(const char* searchString, const TokenTy
         int searchStringLength = 0;
         while (searchString[searchStringLength] != '\0') searchStringLength++;
 
-        if (CompareStringToToken(searchString, searchStringLength, tokens[i].tokenIndex))
+        if (CompareStringToToken(searchString, searchStringLength, i))
         {
             tokens[i].tokenType = tokenType;
         }
@@ -252,7 +252,7 @@ bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, co
     if (str1Length != tokens[indexOfToken].tokenLength) return false;
     for (int i = 0; i < str1Length; i++)
     {
-        if (str1[i] != fileChars[i + indexOfToken]) return false;
+        if (str1[i] != fileChars[i + tokens[indexOfToken].tokenIndex]) return false;
     }
 
     return true;
