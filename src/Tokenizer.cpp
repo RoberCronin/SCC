@@ -28,10 +28,10 @@ void Tokenizer::Tokenize()
 
 void Tokenizer::PrintTokens()
 {
-    for (int i = 0; i < token.size(); i++)
+    for (int i = 0; i < tokens.size(); i++)
     {
         // print token type
-        switch (token[i].tokenType)
+        switch (tokens[i].tokenType)
         {
             // weird formatting because of using the preprocessor to automatically get token type enum names
 #define TOKENTYPE_DEF(x)                                                                                                                                       \
@@ -44,11 +44,11 @@ void Tokenizer::PrintTokens()
 
         std::cout << " \"";
 
-        for (int j = 0; j < token[i].tokenLength; j++)
+        for (int j = 0; j < tokens[i].tokenLength; j++)
         {
-            std::cout << filePointer[token[i].tokenIndex + j];
+            std::cout << filePointer[tokens[i].tokenIndex + j];
         }
-        std::cout << "\"    Token Index: " << token[i].tokenIndex << "    Token Length: " << token[i].tokenLength;
+        std::cout << "\"    Token Index: " << tokens[i].tokenIndex << "    Token Length: " << tokens[i].tokenLength;
         std::cout << std::endl;
     }
 }
@@ -120,17 +120,17 @@ bool Tokenizer::CharAtIndexIsWhitespace(const int& index)
 
 void Tokenizer::ChangeIntegersToCorrectTokenType()
 {
-    for (int i = 0; i < token.size(); i++)
+    for (int i = 0; i < tokens.size(); i++)
     {
-        if (IsTokenInteger(i)) token[i].tokenType = CONSTANAT_INTEGER;
+        if (IsTokenInteger(i)) tokens[i].tokenType = CONSTANAT_INTEGER;
     }
 }
 
 bool Tokenizer::IsTokenInteger(const int& indexOfToken)
 {
-    for (int i = 0; i < token[indexOfToken].tokenLength; i++)
+    for (int i = 0; i < tokens[indexOfToken].tokenLength; i++)
     {
-        switch (filePointer[i + token[indexOfToken].tokenIndex])
+        switch (filePointer[i + tokens[indexOfToken].tokenIndex])
         {
         case '0':
         case '1':
@@ -188,15 +188,15 @@ void Tokenizer::ChangeKeywordsToCorrectTokenType()
 
 void Tokenizer::ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType)
 {
-    for (int i = 0; i < token.size(); i++)
+    for (int i = 0; i < tokens.size(); i++)
     {
         int counter = 0;
         int searchStringLength = 0;
         while (searchString[searchStringLength] != '\0') searchStringLength++;
 
-        if (CompareStringToToken(searchString, searchStringLength, token[i].tokenIndex, token[i].tokenLength))
+        if (CompareStringToToken(searchString, searchStringLength, tokens[i].tokenIndex, tokens[i].tokenLength))
         {
-            token[i].tokenType = tokenType;
+            tokens[i].tokenType = tokenType;
         }
     }
 }
@@ -260,5 +260,5 @@ bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, co
 
 void Tokenizer::AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType)
 {
-    token.push_back({tokenIndex, tokenLength, tokenType});
+    tokens.push_back({tokenIndex, tokenLength, tokenType});
 }

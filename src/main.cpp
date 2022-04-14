@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 
     file.Tokenize();
     file.PrintTokens();
-    std::cout << file.token.size() << " tokens" << std::endl;
+    std::cout << file.tokens.size() << " tokens" << std::endl;
 
     return 0;
 }
