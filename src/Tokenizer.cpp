@@ -194,7 +194,7 @@ void Tokenizer::ChangeTokenTypeOfKeyword(const char* searchString, const TokenTy
         int searchStringLength = 0;
         while (searchString[searchStringLength] != '\0') searchStringLength++;
 
-        if (CompareStringToToken(searchString, searchStringLength, tokens[i].tokenIndex, tokens[i].tokenLength))
+        if (CompareStringToToken(searchString, searchStringLength, tokens[i].tokenIndex))
         {
             tokens[i].tokenType = tokenType;
         }
@@ -247,9 +247,9 @@ TokenType Tokenizer::GetSeparatorTokenTypeFromIndex(const int& index)
     }
 }
 
-bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength)
+bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken)
 {
-    if (str1Length != tokenLength) return false;
+    if (str1Length != tokens[indexOfToken].tokenLength) return false;
     for (int i = 0; i < str1Length; i++)
     {
         if (str1[i] != filePointer[i + indexOfToken]) return false;

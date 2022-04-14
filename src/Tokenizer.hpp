@@ -41,7 +41,7 @@ private:
     void ChangeIntegersToCorrectTokenType();
 
     // Checks if a string matches a token
-    bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength);
+    bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken);
 
     // Changes the type of token for all keywords matching 'searchString'
     void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
