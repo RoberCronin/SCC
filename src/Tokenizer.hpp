@@ -22,7 +22,6 @@ public:
     char* filePointer;
     int fileLength;
     int tokenCount = 0;
-    std::vector<char*> tokens;
     std::vector<TokenInfo> token;
 
     Tokenizer(const char* FilePath);
