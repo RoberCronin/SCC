@@ -15,7 +15,7 @@ int main(int argc, char** argv)
     // print out file
     for (int i = 0; i < file.fileLength; i++)
     {
-        std::cout << file.filePointer[i];
+        std::cout << file.fileChars[i];
     }
     std::cout << '\n' << file.fileLength << " characters long" << std::endl;
 

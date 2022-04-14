@@ -11,7 +11,7 @@ Tokenizer::Tokenizer(const char* FilePath)
 
 Tokenizer::~Tokenizer()
 {
-    delete[] filePointer;
+    delete[] fileChars;
 }
 
 void Tokenizer::Tokenize()
@@ -46,7 +46,7 @@ void Tokenizer::PrintTokens()
 
         for (int j = 0; j < tokens[i].tokenLength; j++)
         {
-            std::cout << filePointer[tokens[i].tokenIndex + j];
+            std::cout << fileChars[tokens[i].tokenIndex + j];
         }
         std::cout << "\"    Token Index: " << tokens[i].tokenIndex << "    Token Length: " << tokens[i].tokenLength;
         std::cout << std::endl;
@@ -63,7 +63,7 @@ void Tokenizer::OpenFile(const char* FilePath)
     char* buffer = new char[fileLength]; // allocate memory for a buffer of appropriate dimension
     t.read(buffer, fileLength);          // read the whole file into the buffer
     t.close();                           // close file handle
-    filePointer = buffer;
+    fileChars = buffer;
 }
 
 void Tokenizer::SearchForConsecutiveChars(const int& index)
@@ -80,7 +80,7 @@ void Tokenizer::SearchForConsecutiveChars(const int& index)
 
 bool Tokenizer::CharAtIndexIsSeparator(const int& index)
 {
-    switch (filePointer[index])
+    switch (fileChars[index])
     {
     case '#':
     case '(':
@@ -104,7 +104,7 @@ bool Tokenizer::CharAtIndexIsSeparator(const int& index)
 
 bool Tokenizer::CharAtIndexIsWhitespace(const int& index)
 {
-    switch (filePointer[index])
+    switch (fileChars[index])
     {
     case ' ':
     case '\n':
@@ -130,7 +130,7 @@ bool Tokenizer::IsTokenInteger(const int& indexOfToken)
 {
     for (int i = 0; i < tokens[indexOfToken].tokenLength; i++)
     {
-        switch (filePointer[i + tokens[indexOfToken].tokenIndex])
+        switch (fileChars[i + tokens[indexOfToken].tokenIndex])
         {
         case '0':
         case '1':
@@ -203,7 +203,7 @@ void Tokenizer::ChangeTokenTypeOfKeyword(const char* searchString, const TokenTy
 
 TokenType Tokenizer::GetSeparatorTokenTypeFromIndex(const int& index)
 {
-    switch (filePointer[index])
+    switch (fileChars[index])
     {
     case '#':
         return SEPARATOR_HASH;
@@ -252,7 +252,7 @@ bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, co
     if (str1Length != tokens[indexOfToken].tokenLength) return false;
     for (int i = 0; i < str1Length; i++)
     {
-        if (str1[i] != filePointer[i + indexOfToken]) return false;
+        if (str1[i] != fileChars[i + indexOfToken]) return false;
     }
 
     return true;

@@ -18,7 +18,7 @@ struct TokenInfo
 class Tokenizer
 {
 public:
-    char* filePointer;
+    char* fileChars;
     int fileLength;
     int tokenCount = 0;
     std::vector<TokenInfo> tokens;
