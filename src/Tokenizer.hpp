@@ -31,27 +31,28 @@ public:
     void PrintTokens();
 
 private:
-    int currentTokenLength = 0;
+    // Searches for substring that are separated by whitespace, and or non-separator tokens
+    // then adds that substring to the 'tokens' vector
     void SearchForConsecutiveChars(const int& index);
+    int currentTokenLength = 0;
 
-    void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
-
+    // Changes tokens to correct types
     void ChangeKeywordsToCorrectTokenType();
-
-    void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
-
     void ChangeIntegersToCorrectTokenType();
 
-    bool IsTokenInteger(const int& indexOfToken);
-
+    // Checks if a string matches a token
     bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken, const int& tokenLength);
 
-    bool CharAtIndexIsSeparator(const int& index);
+    // Changes the type of token for all keywords matching 'searchString'
+    void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
 
+    bool IsTokenInteger(const int& indexOfToken);
+    bool CharAtIndexIsSeparator(const int& index);
     bool CharAtIndexIsWhitespace(const int& index);
 
     TokenType GetSeparatorTokenTypeFromIndex(const int& index);
 
     // Opens file, and saves data to filePointer, and saves length of file in length
     void OpenFile(const char* FilePath);
+    void AddToken(const int& tokenIndex, const int& tokenLength, const TokenType& tokenType);
 };
