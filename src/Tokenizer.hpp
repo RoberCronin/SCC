@@ -51,6 +51,9 @@ private:
     bool IsTokenInteger(const int& indexOfToken);
     bool CharAtIndexIsSeparator(const int& index);
     bool CharAtIndexIsWhitespace(const int& index);
+    bool IsTokenIdentifier(const int& indexOfToken);
+    bool IsSpecialCharacter(const char& character);
+
 
     // Gets the type of token for a separator
     TokenType GetSeparatorTokenTypeFromIndex(const int& index);
