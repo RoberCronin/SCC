@@ -40,6 +40,7 @@ private:
     // Changes tokens to correct types
     void ChangeKeywordsToCorrectTokenType();
     void ChangeIntegersToCorrectTokenType();
+    void ChangeIdentifiersToCorrectTokenType();
 
     // Checks if a string matches a token
     bool CompareStringToToken(const char* str1, const int& str1Length, const int& indexOfToken);
@@ -51,6 +52,7 @@ private:
     bool CharAtIndexIsSeparator(const int& index);
     bool CharAtIndexIsWhitespace(const int& index);
 
+    // Gets the type of token for a separator
     TokenType GetSeparatorTokenTypeFromIndex(const int& index);
 
     // Opens file, and saves data to filePointer, and saves length of file in length
