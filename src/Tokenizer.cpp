@@ -43,17 +43,20 @@ void Tokenizer::PrintTokens()
 #undef TOKENTYPE_DEF
         }
 
+        // print token value
         std::cout << " \"";
-
         for (int j = 0; j < tokens[i].tokenLength; j++)
         {
             std::cout << fileChars[tokens[i].tokenIndex + j];
         }
+
+        // print token attributes
         std::cout << "\"    Token Index: " << tokens[i].tokenIndex << "    Token Length: " << tokens[i].tokenLength;
         std::cout << std::endl;
     }
 }
 
+// private methods 
 void Tokenizer::OpenFile(const char* FilePath)
 {
     std::ifstream t;
@@ -240,7 +243,7 @@ TokenType Tokenizer::GetSeparatorTokenTypeFromIndex(const int& index)
         return SEPARATOR_COMMA;
         break;
     case '\"':
-        return SEPARATOR_CLOSE_PARENTHESIS;
+        return SEPARATOR_QUOTE;
         break;
     default:
         return NO_TOKEN;
@@ -259,7 +262,7 @@ bool Tokenizer::CompareStringToToken(const char* str1, const int& str1Length, co
     return true;
 }
 
-void Tokenizer::ChangeIdentifiersToCorrectTokenType() 
+void Tokenizer::ChangeIdentifiersToCorrectTokenType()
 {
     for (int i = 0; i < tokens.size(); i++)
     {
