@@ -23,9 +23,9 @@ void Tokenizer::Tokenize()
         if (CharAtIndexIsSeparator(i)) AddToken(i, 1, GetSeparatorTokenTypeFromIndex(i));
     }
 
-    ChangeIdentifiersToCorrectTokenType();
     ChangeKeywordsToCorrectTokenType();
     ChangeIntegersToCorrectTokenType();
+    ChangeIdentifiersToCorrectTokenType();
 }
 
 void Tokenizer::PrintTokens()
@@ -93,7 +93,14 @@ void Tokenizer::SearchForIndividualTokens(const int& index)
     }
 
     // if the token length is 0 then the current character is a separator
-    if (currentTokenLength != 0) AddToken(index - currentTokenLength, currentTokenLength, NO_TOKEN);
+    if (currentTokenLength != 0)
+    {
+        if (endParenthesis == index)
+            AddToken(index - currentTokenLength, currentTokenLength, CONSTANT_STRING);
+        else
+            AddToken(index - currentTokenLength, currentTokenLength, NO_TOKEN);
+    }
+
     currentTokenLength = 0;
 }
 
@@ -281,7 +288,7 @@ void Tokenizer::ChangeIdentifiersToCorrectTokenType()
 {
     for (int i = 0; i < tokens.size(); i++)
     {
-        if (IsTokenIdentifier(i)) tokens[i].tokenType = IDENTIFIER;
+        if (IsTokenIdentifier(i) && tokens[i].tokenType == NO_TOKEN) tokens[i].tokenType = IDENTIFIER;
     }
 }
 
