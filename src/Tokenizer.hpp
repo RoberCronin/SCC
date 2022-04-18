@@ -25,6 +25,8 @@ private:
     // then adds that substring to the 'tokens' vector
     void SearchForIndividualTokens(const int& index);
     int currentTokenLength = 0;
+    bool insideParanthesis = false;
+    int endParenthesis = -1;
 
     // Changes tokens to correct types
     void ChangeKeywordsToCorrectTokenType();
@@ -38,9 +40,9 @@ private:
     void ChangeTokenTypeOfKeyword(const char* searchString, const TokenType& tokenType);
 
     bool IsTokenInteger(const int& indexOfToken);
+    bool IsTokenIdentifier(const int& indexOfToken);
     bool CharAtIndexIsSeparator(const int& index);
     bool CharAtIndexIsWhitespace(const int& index);
-    bool IsTokenIdentifier(const int& indexOfToken);
     bool IsSpecialCharacter(const char& character);
 
 

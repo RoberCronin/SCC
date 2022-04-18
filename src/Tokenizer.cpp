@@ -2,8 +2,8 @@
 #include <iostream>
 #include <vector>
 
-#include "Tokens.hpp"
 #include "Tokenizer.hpp"
+#include "Tokens.hpp"
 
 Tokenizer::Tokenizer(const char* FilePath)
 {
@@ -57,7 +57,7 @@ void Tokenizer::PrintTokens()
     }
 }
 
-// private methods 
+// private methods
 void Tokenizer::OpenFile(const char* FilePath)
 {
     std::ifstream t;
@@ -73,7 +73,20 @@ void Tokenizer::OpenFile(const char* FilePath)
 
 void Tokenizer::SearchForIndividualTokens(const int& index)
 {
-    if (!(CharAtIndexIsSeparator(index) || CharAtIndexIsWhitespace(index)))
+    if (index > 0 && index < fileLength + 1)
+    {
+        // if previous character is a paranthesis
+        if (fileChars[index - 1] == '"' && endParenthesis != index - 1) insideParanthesis = true;
+
+        // if next character is a parenthesis and index is inside parenthesis
+        if (fileChars[index + 1] == '"' && insideParanthesis)
+        {
+            insideParanthesis = false;
+            endParenthesis = index + 1;
+        }
+    }
+
+    if (!(CharAtIndexIsSeparator(index) || CharAtIndexIsWhitespace(index)) || insideParanthesis)
     {
         currentTokenLength++;
         return;
