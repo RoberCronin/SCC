@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "Tokens.hpp"
 #include "Tokenizer.hpp"
 
 Tokenizer::Tokenizer(const char* FilePath)
@@ -18,7 +19,7 @@ void Tokenizer::Tokenize()
 {
     for (int i = 0; i < fileLength; i++)
     {
-        SearchForConsecutiveChars(i);
+        SearchForIndividualTokens(i);
         if (CharAtIndexIsSeparator(i)) AddToken(i, 1, GetSeparatorTokenTypeFromIndex(i));
     }
 
@@ -70,7 +71,7 @@ void Tokenizer::OpenFile(const char* FilePath)
     fileChars = buffer;
 }
 
-void Tokenizer::SearchForConsecutiveChars(const int& index)
+void Tokenizer::SearchForIndividualTokens(const int& index)
 {
     if (!(CharAtIndexIsSeparator(index) || CharAtIndexIsWhitespace(index)))
     {
@@ -78,6 +79,7 @@ void Tokenizer::SearchForConsecutiveChars(const int& index)
         return;
     }
 
+    // if the token length is 0 then the current character is a separator
     if (currentTokenLength != 0) AddToken(index - currentTokenLength, currentTokenLength, NO_TOKEN);
     currentTokenLength = 0;
 }

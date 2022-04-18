@@ -23,7 +23,7 @@ public:
 private:
     // Searches for substring that are separated by whitespace, and or non-separator tokens
     // then adds that substring to the 'tokens' vector
-    void SearchForConsecutiveChars(const int& index);
+    void SearchForIndividualTokens(const int& index);
     int currentTokenLength = 0;
 
     // Changes tokens to correct types
